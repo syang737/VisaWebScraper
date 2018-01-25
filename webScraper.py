@@ -14,9 +14,32 @@ ids = soup.find_all(string=re.compile('NEWY'))
 
 sameDayIds = soup.find_all(string=re.compile('NEWY20171207'))
 
-print("Visas approved on 12/07: " + '\n')
-for i in sameDayIds:
-	print(i + '\n')
+FileName = 'oldIds.txt'
+with open(FileName) as f:
+	content = f.read().splitlines()
+content = [x.strip() for x in content ]
+
+newContent=[]
+for i in ids:
+	i = i.strip() # take out whitespaces before and after
+	index = i.index('NEW')
+	if( index > 0 ):
+		i = i[index:len(i)]
+	newContent.append(i)
+
+# compare content and newContent
+diff = list(set(newContent) - set(content))
+
+if(len(diff) == 0):
+	print("No new Ids approved today.")
+else:
+	print("New Ids approved today:")
+	for i in diff:
+		print(diff[i])
+
+oldIdFile_w = open(FileName, 'w')
+for i in newContent:
+	oldIdFile_w.write(i+'\n')
 
 for i in ids:
 	if i == 'NEWY201712070014':
